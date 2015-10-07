@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ! -d ~/power ]; then
+  mkdir -p ~/power
+fi
+
+sshfs ada10sny@power.cs.lth.se: ~/power
+ssh power "cd factorial_par_cpp; ./t"
