@@ -4,5 +4,5 @@ if [ ! -d ~/power ]; then
   mkdir -p ~/power
 fi
 
-sshfs ada10sny@power.cs.lth.se: ~/power
+sshfs ada10sny@power.cs.lth.se: ~/power -o IdentityFile=~/.ssh/ssh-key_rsa
 ssh power "cd factorial_par_cpp; ./t"
