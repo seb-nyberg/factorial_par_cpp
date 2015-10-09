@@ -119,12 +119,14 @@ static void consume()
 	int			n;
 	unsigned long long	f;
 
+  sum_mutex.lock();
 	while ((n = worklist->get()) > 0) {
 		f = factorial(n);
-    // sum_mutex.lock();
+    sum_mutex.unlock();
 		sum += f;
-    // sum_mutex.unlock();
+    sum_mutex.lock();
 	}
+  sum_mutex.unlock();
 }
 
 static void work()
