@@ -2,6 +2,7 @@
 #include <cstring>
 #include <thread>
 #include <mutex>
+#include <atomic>
 #include <condition_variable>
 
 #include "timebase.h"
@@ -91,11 +92,11 @@ public:
 	}
 };
 
-static worklist_t*		worklist;
-static std::atomic<unsigned long long>	sum;
-std::mutex sum_mutex;
-static int			iterations;
-static int			max;
+static worklist_t* worklist;
+std::mutex         sum_mutex;
+static int         iterations;
+static int         max;
+static std::atomic<unsigned long long> sum;
 
 static void produce()
 {
