@@ -47,9 +47,10 @@ public:
 
 	int get()
 	{
-		size_t				i;
-		// size_t				num;
+		int				i;
+		size_t				num;
 
+#if 1
 		/* hint: if your class has a mutex m
 		 * and a condition_variable c, you
 		 * can lock it and wait for a number 
@@ -71,6 +72,9 @@ public:
 		 */
 
 		c.wait(u, [this]() { return total > 0; } );
+
+#endif
+
 
     fprintf(stdout, "Worker thread is processing data\n");
 
