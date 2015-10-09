@@ -73,9 +73,8 @@ public:
 
 		c.wait(u, [this]() { return total > 0; } );
 
-    puts("Worker thread is processing data\n");
+    puts("Worker thread is processing data");
 
-    m.lock();
 		for (i = 1; i <= n; i += 1)
 			if (a[i] > 0)
 				break;
