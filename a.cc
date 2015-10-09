@@ -70,9 +70,9 @@ public:
 		 *
 		 */
 
+    m.lock();
 		c.wait(u, [this]() { return total > 0; } );
 
-    m.lock();
 		for (i = 1; i <= n; i += 1)
 			if (a[i] > 0)
 				break;
@@ -119,14 +119,12 @@ static void consume()
 	int			n;
 	unsigned long long	f;
 
-  sum_mutex.lock();
 	while ((n = worklist->get()) > 0) {
 		f = factorial(n);
-    sum_mutex.unlock();
-		sum += f;
     sum_mutex.lock();
+		sum += f;
+    sum_mutex.unlock();
 	}
-  sum_mutex.unlock();
 }
 
 static void work()
