@@ -57,7 +57,7 @@ public:
 		 *
 		 */
 
-		std::unique_lock<std::mutex>	u(m);
+		// std::unique_lock<std::mutex>	u(m);
 
 		/* the lambda is a predicate that 
 		 * returns false when waiting should 
@@ -70,9 +70,9 @@ public:
 		 *
 		 */
 
-		c.wait(u, [this]() { return total > 0; } );
+		// c.wait(u, [this]() { return total > 0; } );
 
-    m.lock();
+    // m.lock();
 		for (i = 1; i <= n; i += 1)
 			if (a[i] > 0)
 				break;
@@ -85,7 +85,7 @@ public:
 			abort();
 		} else
 			i = 0;
-    m.unlock();
+    // m.unlock();
 
 		return i;
 	}
@@ -121,9 +121,9 @@ static void consume()
 
 	while ((n = worklist->get()) > 0) {
 		f = factorial(n);
-    sum_mutex.lock();
+    // sum_mutex.lock();
 		sum += f;
-    sum_mutex.unlock();
+    // sum_mutex.unlock();
 	}
 }
 
