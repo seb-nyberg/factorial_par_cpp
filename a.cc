@@ -72,7 +72,7 @@ public:
 
 		// c.wait(u, [this]() { return total > 0; } );
 
-    // m.lock();
+    m.lock();
 		for (i = 1; i <= n; i += 1)
 			if (a[i] > 0)
 				break;
@@ -85,7 +85,7 @@ public:
 			abort();
 		} else
 			i = 0;
-    // m.unlock();
+    m.unlock();
 
 		return i;
 	}
