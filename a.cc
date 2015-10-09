@@ -87,7 +87,7 @@ public:
 			abort();
 		} else
 			i = 0;
-    m.unlock();
+    u.unlock();
 
 		return i;
 	}
