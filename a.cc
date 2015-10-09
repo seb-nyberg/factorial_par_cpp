@@ -57,7 +57,7 @@ public:
 		 *
 		 */
 
-		// std::unique_lock<std::mutex>	u(m);
+		std::unique_lock<std::mutex>	u(m);
 
 		/* the lambda is a predicate that 
 		 * returns false when waiting should 
@@ -70,7 +70,7 @@ public:
 		 *
 		 */
 
-		// c.wait(u, [this]() { return total > 0; } );
+		c.wait(u, [this]() { return total > 0; } );
 
     m.lock();
 		for (i = 1; i <= n; i += 1)
