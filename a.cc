@@ -47,7 +47,7 @@ public:
 
 	int get()
 	{
-		int				i;
+    size_t				i;
 		int				num;
 
 #if 1
@@ -74,23 +74,20 @@ public:
 		c.wait(u, [this]() { return total > 0; } );
 
 #endif
-    // {
-      // std::lock_guard<std::mutex> lk(m);
-      for (i = 1; i <= n; i += 1)
-        if (a[i] > 0)
-          break;
+    for (i = 1; i <= n; i += 1)
+      if (a[i] > 0)
+        break;
 
-      if (i <= n) {
-        a[i] -= 1;
-        total -= 1;
-      } else if (a[0] == 0) {
-        fprintf(stderr, "corrupt data at line %d!\n", __LINE__);
-        abort();
-      } else
-        i = 0;
+    if (i <= n) {
+      a[i] -= 1;
+      total -= 1;
+    } else if (a[0] == 0) {
+      fprintf(stderr, "corrupt data at line %d!\n", __LINE__);
+      abort();
+    } else
+      i = 0;
 
-      return i;
-    // }
+    return i;
 	}
 };
 
