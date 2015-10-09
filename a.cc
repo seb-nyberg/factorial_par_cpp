@@ -39,10 +39,9 @@ public:
 
 	void put(int num)
 	{
-    m.lock();
+    std::unique_lock<std::mutex> lock(m);
 		a[num] += 1;
 		total += 1;
-    m.unlock();
     c.notify_one();
 	}
 
@@ -87,7 +86,6 @@ public:
 			abort();
 		} else
 			i = 0;
-    u.unlock();
 
 		return i;
 	}
