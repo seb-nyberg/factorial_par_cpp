@@ -48,7 +48,7 @@ public:
 	int get()
 	{
     size_t				i;
-		int				num;
+		// int				num;
 
 #if 1
 		/* hint: if your class has a mutex m
