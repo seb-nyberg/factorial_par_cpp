@@ -43,6 +43,7 @@ public:
 		a[num] += 1;
 		total += 1;
     m.unlock();
+    c.notify_one();
 	}
 
 	int get()
