@@ -7,9 +7,11 @@
 #include "timebase.h"
 
 class worklist_t {
-	int*			a;
-	size_t			n;
-	size_t			total;	// sum a[0]..a[n-1]
+	int*                    a;
+	size_t                  n;
+	size_t                  total; // sum a[0]..a[n-1]
+  std::mutex              m;
+  std::condition_variable c;
 		
 public:
 	worklist_t(size_t max)
@@ -37,16 +39,17 @@ public:
 
 	void put(int num)
 	{
+    m.lock();
 		a[num] += 1;
 		total += 1;
+    m.unlock();
 	}
 
 	int get()
 	{
-		int				i;
-		int				num;
+		size_t				i;
+		// size_t				num;
 
-#if 0
 		/* hint: if your class has a mutex m
 		 * and a condition_variable c, you
 		 * can lock it and wait for a number 
@@ -68,8 +71,8 @@ public:
 		 */
 
 		c.wait(u, [this]() { return total > 0; } );
-#endif
 
+    m.lock();
 		for (i = 1; i <= n; i += 1)
 			if (a[i] > 0)
 				break;
@@ -82,6 +85,7 @@ public:
 			abort();
 		} else
 			i = 0;
+    m.unlock();
 
 		return i;
 	}
@@ -89,6 +93,7 @@ public:
 
 static worklist_t*		worklist;
 static unsigned long long	sum;
+std::mutex sum_mutex;
 static int			iterations;
 static int			max;
 
@@ -116,7 +121,9 @@ static void consume()
 
 	while ((n = worklist->get()) > 0) {
 		f = factorial(n);
+    sum_mutex.lock();
 		sum += f;
+    sum_mutex.unlock();
 	}
 }
 
