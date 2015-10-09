@@ -43,6 +43,7 @@ public:
 		a[num] += 1;
 		total += 1;
     m.unlock();
+    c.notify_one();
 	}
 
 	int get()
@@ -74,6 +75,7 @@ public:
 
     puts("Worker thread is processing data\n");
 
+    m.lock();
 		for (i = 1; i <= n; i += 1)
 			if (a[i] > 0)
 				break;
