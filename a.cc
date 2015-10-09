@@ -75,6 +75,7 @@ public:
 
 #endif
 
+    std::lock_guard<std::mutex> lk(m);
 		for (i = 1; i <= n; i += 1)
 			if (a[i] > 0)
 				break;
