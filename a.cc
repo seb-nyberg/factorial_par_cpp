@@ -157,7 +157,7 @@ int main(void)
 
 	init_timebase();
 
-	// iterations	= 100000;
+	iterations	= 100000;
 	iterations	= 100;
 	max		= 12;
 	correct		= 0;
