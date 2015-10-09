@@ -39,7 +39,7 @@ public:
 
 	void put(int num)
 	{
-    std::unique_lock<std::mutex> lock(m);
+    std::unique_lock<std::mutex> u(m);
 		a[num] += 1;
 		total += 1;
     c.notify_one();
@@ -48,7 +48,7 @@ public:
 	int get()
 	{
 		int				i;
-		size_t				num;
+		int				num;
 
 #if 1
 		/* hint: if your class has a mutex m
@@ -74,9 +74,6 @@ public:
 		c.wait(u, [this]() { return total > 0; } );
 
 #endif
-
-
-    fprintf(stdout, "Worker thread is processing data\n");
 
 		for (i = 1; i <= n; i += 1)
 			if (a[i] > 0)
