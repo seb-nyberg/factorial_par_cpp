@@ -43,7 +43,7 @@ public:
     std::lock_guard<std::mutex> u(m);
 		a[num] += 1;
 		total += 1;
-    c.notify_all();
+    c.notify_one();
 	}
 
 	int get()
