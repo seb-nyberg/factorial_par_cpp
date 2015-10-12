@@ -39,7 +39,6 @@ public:
 
 	void put(int num)
 	{
-    // std::lock_guard<std::mutex> u(m);
     while(flag.test_and_set(std::memory_order_acquire)) {}
 		a[num] += 1;
 		total += 1;
@@ -49,50 +48,17 @@ public:
 	int get()
 	{
     size_t				i;
-		// int				num;
 
-#if 1
-		/* hint: if your class has a mutex m
-		 * and a condition_variable c, you
-		 * can lock it and wait for a number 
-		 * (i.e. total > 0) as follows.
-		 *
-		 */
+    while(flag.test_and_set(std::memory_order_acquire));
 
-		// std::unique_lock<std::mutex>	u(m);
+    if (total <= 0) {
 
-		/* the lambda is a predicate that 
-		 * returns false when waiting should 
-		 * continue.
-		 *
-		 * this mechanism will automatically
-		 * unlock the mutex m when you return
-		 * from this function. this happens when
-		 * the destructor of u is called.
-		 *
-		 */
-
-		// c.wait(u, [this]() { return total > 0; } );
-
-#endif
-
-    while(1) {
-      while(flag.test_and_set(std::memory_order_acquire));
-      if (total <= 0) {
+      do {
         flag.clear();
-        continue;
-      } else {
-        break;
-      }
+        while(flag.test_and_set(std::memory_order_acquire));
+      } while(total <= 0);
+
     }
-    //
-    // while(flag.test_and_set(std::memory_order_acquire));
-    // if (total <= 0) {
-    //   do {
-    //     flag.clear();
-    //     while(flag.test_and_set(std::memory_order_acquire));
-    //   } while(total <= 0);
-    // }
 
     for (i = 1; i <= n; i += 1)
       if (a[i] > 0)
