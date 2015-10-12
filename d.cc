@@ -112,7 +112,7 @@ static void consume()
 		f = factorial(n);
 
     VAR ^= 1234;
-    sum += 4;
+    sum += f;
     VAR ^= 5678;
 	}
 }
