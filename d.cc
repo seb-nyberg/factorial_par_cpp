@@ -111,9 +111,7 @@ static void consume()
 	while ((n = worklist->get()) > 0) {
 		f = factorial(n);
 
-    VAR ^= 1234;
-    sum += f;
-    VAR ^= 5678;
+    sum.fetch_add(f, std::memory_order_relaxed);
 	}
 }
 
