@@ -75,13 +75,24 @@ public:
 		// c.wait(u, [this]() { return total > 0; } );
 
 #endif
-    while(flag.test_and_set(std::memory_order_acquire));
-    if (total <= 0) {
-      do {
+
+    while(1) {
+      while(flag.test_and_set(std::memory_order_acquire));
+      if (total <= 0) {
         flag.clear();
-        while(flag.test_and_set(std::memory_order_acquire));
-      } while(total <= 0);
+        continue;
+      } else {
+        break;
+      }
     }
+    //
+    // while(flag.test_and_set(std::memory_order_acquire));
+    // if (total <= 0) {
+    //   do {
+    //     flag.clear();
+    //     while(flag.test_and_set(std::memory_order_acquire));
+    //   } while(total <= 0);
+    // }
 
     for (i = 1; i <= n; i += 1)
       if (a[i] > 0)
