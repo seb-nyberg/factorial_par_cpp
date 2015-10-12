@@ -122,7 +122,7 @@ static void consume()
 
 	while ((n = worklist->get()) > 0) {
 		f = factorial(n);
-		sum += f;
+		sum = sum.fetch_add(f);
 	}
 }
 
