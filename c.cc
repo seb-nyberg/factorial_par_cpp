@@ -41,7 +41,7 @@ public:
 
 	void put(int num)
 	{
-    while(flag.test_and_set()) {}
+    while(flag.test_and_set(std::memory_order_acquire)) {}
 		a[num] += 1;
 		total += 1;
     flag.clear();
@@ -73,10 +73,10 @@ public:
 		 *
 		 */
 
-    while(flag.test_and_set()) {}
+    while(flag.test_and_set(std::memory_order_acquire)) {}
     while(total <= 0) {
       flag.clear();
-      while(flag.test_and_set()) {}
+      while(flag.test_and_set(std::memory_order_acquire)) {}
     }
 		// c.wait(u, [this]() { return total > 0; } );
 
