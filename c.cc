@@ -8,12 +8,10 @@
 #include "timebase.h"
 
 class worklist_t {
-	int*                       a;
-	size_t                     n;
-	size_t                     total; // sum a[0]..a[n-1]
-  std::atomic_flag           flag;
-  // std::mutex              m;
-  // std::condition_variable c;
+	int*                    a;
+	size_t                  n;
+	size_t                  total; // sum a[0]..a[n-1]
+  std::atomic_flag flag;
 		
 public:
 	worklist_t(size_t max)
@@ -41,10 +39,11 @@ public:
 
 	void put(int num)
 	{
+    // std::lock_guard<std::mutex> u(m);
     while(flag.test_and_set(std::memory_order_acquire)) {}
 		a[num] += 1;
 		total += 1;
-    flag.clear();
+    flag.clear(std::memory_order_acquire);
 	}
 
 	int get()
@@ -73,14 +72,17 @@ public:
 		 *
 		 */
 
-    while(flag.test_and_set(std::memory_order_acquire)) {}
-    while(total <= 0) {
-      flag.clear();
-      while(flag.test_and_set(std::memory_order_acquire)) {}
-    }
 		// c.wait(u, [this]() { return total > 0; } );
 
 #endif
+    while(flag.test_and_set(std::memory_order_acquire));
+    if (total <= 0) {
+      do {
+        flag.clear(std::memory_order_acquire);
+        while(flag.test_and_set(std::memory_order_acquire));
+      } while(total <= 0);
+    }
+
     for (i = 1; i <= n; i += 1)
       if (a[i] > 0)
         break;
@@ -94,10 +96,9 @@ public:
     } else
       i = 0;
 
-    flag.clear();
+    flag.clear(std::memory_order_acquire);
 
     return i;
-
 	}
 };
 
@@ -131,9 +132,7 @@ static void consume()
 
 	while ((n = worklist->get()) > 0) {
 		f = factorial(n);
-    sum_mutex.lock();
-		sum += f;
-    sum_mutex.unlock();
+		sum.fetch_add(f);
 	}
 }
 
