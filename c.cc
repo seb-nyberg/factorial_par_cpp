@@ -43,7 +43,7 @@ public:
     while(flag.test_and_set(std::memory_order_acquire)) {}
 		a[num] += 1;
 		total += 1;
-    flag.clear(std::memory_order_acquire);
+    flag.clear();
 	}
 
 	int get()
@@ -78,7 +78,7 @@ public:
     while(flag.test_and_set(std::memory_order_acquire));
     if (total <= 0) {
       do {
-        flag.clear(std::memory_order_acquire);
+        flag.clear();
         while(flag.test_and_set(std::memory_order_acquire));
       } while(total <= 0);
     }
@@ -96,7 +96,7 @@ public:
     } else
       i = 0;
 
-    flag.clear(std::memory_order_acquire);
+    flag.clear();
 
     return i;
 	}
