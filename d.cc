@@ -52,12 +52,7 @@ public:
     while(flag.test_and_set(std::memory_order_acquire));
 
     if (total <= 0) {
-
-      do {
-        flag.clear();
-        while(flag.test_and_set(std::memory_order_acquire));
-      } while(total <= 0);
-
+      return 0;
     }
 
     for (i = 1; i <= n; i += 1)
