@@ -74,6 +74,10 @@ public:
 		 */
 
     while(flag.test_and_set()) {}
+    while(total <= 0) {
+      flag.clear();
+      flag.test_and_set();
+    }
 		// c.wait(u, [this]() { return total > 0; } );
 
 #endif
@@ -93,6 +97,7 @@ public:
     flag.clear();
 
     return i;
+
 	}
 };
 
