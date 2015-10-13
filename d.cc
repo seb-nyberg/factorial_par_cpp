@@ -7,11 +7,24 @@
 
 #include "timebase.h"
 
+class spinlock_t {
+  std::atomic_flag flag;
+
+public:
+  void lock() {
+    while(flag.test_and_set(std::memory_order_acquire));
+  }
+
+  void unlock() {
+    flag.clear(std::memory_order_release);
+  }
+};
+
 class worklist_t {
 	int*                    a;
 	size_t                  n;
 	size_t                  total; // sum a[0]..a[n-1]
-  std::atomic_flag flag;
+  spinlock_t lock;
 		
 public:
 	worklist_t(size_t max)
@@ -39,10 +52,10 @@ public:
 
 	void put(int num)
 	{
-    while(flag.test_and_set(std::memory_order_acquire)) {}
+    lock.lock();
 		a[num] += 1;
 		total += 1;
-    flag.clear(std::memory_order_release);
+    lock.unlock();
 	}
 
 	int get()
@@ -50,9 +63,9 @@ public:
     size_t				i;
 
     while(1) {
-      while(flag.test_and_set(std::memory_order_acquire));
+      lock.lock();
       if (total <= 0) {
-        flag.clear(std::memory_order_release);
+        lock.unlock();
       } else {
         break;
       }
@@ -71,7 +84,7 @@ public:
     } else
       i = 0;
 
-    flag.clear(std::memory_order_release);
+    lock.unlock();
 
     return i;
 	}
@@ -82,7 +95,6 @@ std::mutex         sum_mutex;
 static int         iterations;
 static int         max;
 static std::atomic<unsigned long long> sum;
-volatile int VAR;
 
 static void produce()
 {
