@@ -17,7 +17,7 @@ public:
 
   void lock() {
     int expected = 0;
-    while(!flag.compare_exchange_weak(expected, 1, std::memory_order_release, std::memory_order_consume)){
+    while(!flag.compare_exchange_weak(expected, 1, std::memory_order_acquire, std::memory_order_consume)){
       expected = 0;
     }
   }
