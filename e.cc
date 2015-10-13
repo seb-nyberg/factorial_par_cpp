@@ -18,7 +18,7 @@ public:
   void lock() {
     int expected = 0;
     while(!flag.compare_exchange_weak(expected, 1, std::memory_order_acq_rel, std::memory_order_acquire)){
-      // expected = 0;
+      expected = 0;
     }
   }
 
