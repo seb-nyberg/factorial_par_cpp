@@ -42,7 +42,7 @@ public:
     while(flag.test_and_set(std::memory_order_acquire)) {}
 		a[num] += 1;
 		total += 1;
-    flag.clear();
+    flag.clear(std::memory_order_release);
 	}
 
 	int get()
@@ -52,7 +52,7 @@ public:
     while(1) {
       while(flag.test_and_set(std::memory_order_acquire));
       if (total <= 0) {
-        flag.clear();
+        flag.clear(std::memory_order_release);
       } else {
         break;
       }
@@ -71,7 +71,7 @@ public:
     } else
       i = 0;
 
-    flag.clear();
+    flag.clear(std::memory_order_release);
 
     return i;
 	}
