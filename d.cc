@@ -49,11 +49,13 @@ public:
 	{
     size_t				i;
 
-    while(flag.test_and_set(std::memory_order_acquire));
-
-    if (total <= 0) {
-      flag.clear();
-      return 0;
+    while(1) {
+      while(flag.test_and_set(std::memory_order_acquire));
+      if (total <= 0) {
+        flag.clear();
+      } else {
+        break;
+      }
     }
 
     for (i = 1; i <= n; i += 1)
