@@ -17,6 +17,8 @@ public:
 
   void lock() {
     int expected = 0;
+    // consume is a weaker version of memory_order_acquire, it may reorder
+    // unrelated writes that happen before the read
     while(!flag.compare_exchange_weak(expected, 1, std::memory_order_acq_rel, std::memory_order_consume)){
       expected = 0;
     }
